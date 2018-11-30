@@ -1,11 +1,12 @@
 package Chat.Utils.Concurrent.Tree;
 
+import java.io.Serializable;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-public class BinaryTree<K extends Comparable<K>, V> implements Tree<K, V> {
+public class BinaryTree<K extends Comparable<K>, V> implements Tree<K, V>, Serializable {
     private class TreeElement {
         V val;
         K key;
@@ -33,6 +34,11 @@ public class BinaryTree<K extends Comparable<K>, V> implements Tree<K, V> {
         try {
             this.semaphore.acquire();
             wasAquired = true;
+
+            if (this.head == null) {
+                this.head = new TreeElement(key, val);
+                found = true;
+            }
 
             while (!found) {
                 switch (curHead.key.compareTo(key)) {
