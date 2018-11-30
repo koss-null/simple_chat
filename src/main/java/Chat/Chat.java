@@ -6,6 +6,7 @@ import Chat.Database.PersistentDB;
 import java.util.logging.Logger;
 
 public class Chat {
+
     public static void Main() {
         try {
             Logger info = Logger.getLogger("INFO");

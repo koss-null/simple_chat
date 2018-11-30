@@ -4,11 +4,11 @@ import Chat.Utils.Pair.Pair;
 
 public interface Database {
     // reads all info from the disk
-    void Init();
+    void init();
     // encrypts and stores all info
-    void Store();
+    void store();
 
-    void Set(String key, String val);
-    void Remove(String key);
-    void Change(String key, String val);
+    void set(String key, String val);
+    void remove(String key);
+    void change(String key, String val);
 }

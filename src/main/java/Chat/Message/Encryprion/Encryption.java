@@ -1,7 +1,7 @@
 package Chat.Message.Encryprion;
 
-public enum Encriptions {
+public enum Encryption {
     NONE,
     SIMPLE,
-    END2END,
+    END2END
 }
