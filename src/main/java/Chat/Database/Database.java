@@ -10,6 +10,7 @@ public interface Database {
 
     void set(String[] key, String val);
     String get(String[] key);
+    String[] getKeys(String[] key);
     void remove(String[] key);
     void change(String[] key, String val);
 }

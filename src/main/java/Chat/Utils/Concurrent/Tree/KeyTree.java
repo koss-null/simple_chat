@@ -1,6 +1,7 @@
 package Chat.Utils.Concurrent.Tree;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -43,53 +44,30 @@ public class KeyTree<K extends Comparable<K>, V> implements Tree<K, V>, Serializ
 
         var curHead = this.zeroLevel;
         int level = 0;
-        boolean leafFound = false;
         boolean wasAquired = false;
 
         try {
             this.semaphore.acquire();
             wasAquired = true;
 
-            if (this.zeroLevel.size() == 0) {
-                if (key.length == 1) {
-                    this.zeroLevel.add(new TreeElement(key[0], val));
-                    return;
-                }
-                this.zeroLevel.add(new TreeElement(key[level++]));
-            }
-
-            while (!leafFound) {
-                boolean isFinal = key.length-1 == level;
-
-                for (TreeElement elem: curHead) {
+            while (true) {
+                boolean foundKey = false;
+                for (var elem: curHead) {
                     if (elem.key.equals(key[level])) {
-                        if (isFinal) {
+                        foundKey = true;
+                        if (level == key.length-1) {
                             elem.val = val;
                             return;
                         }
-
                         if (elem.nextLevel == null) {
-                            // we finished going down existing tree
-                            leafFound = true;
-                            level++;
-
-                            while (level < key.length) {
-                                elem.nextLevel = new ArrayList<>();
-                                elem.nextLevel.add(new TreeElement(key[level++]));
-                                elem = elem.nextLevel.get(0);
-                            }
-                            elem.val = val;
-                            break;
+                            elem.nextLevel = new ArrayList<>();
                         }
-
                         curHead = elem.nextLevel;
+                        level++;
                     }
                 }
-                if (!leafFound) {
+                if (!foundKey) {
                     curHead.add(new TreeElement(key[level]));
-                // it makes one more useless iteration but simplifies the code
-                } else {
-                    level++;
                 }
             }
         } catch (InterruptedException e) {
@@ -138,6 +116,65 @@ public class KeyTree<K extends Comparable<K>, V> implements Tree<K, V>, Serializ
                     if (elem.key.equals(key[level])) {
                         if  (key.length - 1 == level) {
                             return elem.val;
+                        }
+
+                        curHead = elem.nextLevel;
+                        found = true;
+                        level++;
+                        break;
+                    }
+                }
+                if (!found) {
+                    return null;
+                }
+            }
+        } catch (InterruptedException e) {
+            var errorLogger = Logger.getLogger("ERROR");
+            errorLogger.log(
+                    new LogRecord(
+                            Level.WARNING,
+                            "Caught an interrupt exception while getting the key from the tree"
+                    )
+            );
+            return null;
+        } finally {
+            if (wasAquired) {
+                this.semaphore.release();
+            }
+        }
+
+        return null;
+    }
+
+    // return null if didn't found anything or there is no value
+    public K[] getKeys(K []key) {
+        checkSemaphore();
+
+        List<TreeElement> curHead = this.zeroLevel;
+        int level = 0;
+        boolean wasAquired = false;
+
+        try {
+            this.semaphore.acquire();
+            wasAquired = true;
+
+            while (level < key.length) {
+                if (curHead == null) {
+                    return null;
+                }
+
+                boolean found = false;
+                for  (TreeElement elem: curHead) {
+                    if (elem.key.equals(key[level])) {
+                        if  (key.length - 1 == level) {
+                            if (elem.nextLevel == null) {
+                                return null;
+                            }
+                            K[] keys = (K[]) Array.newInstance(elem.key.getClass(), elem.nextLevel.size());
+                            for (int i = 0; i < elem.nextLevel.size(); i++) {
+                                keys[i] = elem.nextLevel.get(i).key;
+                            }
+                            return keys;
                         }
 
                         curHead = elem.nextLevel;

@@ -19,7 +19,7 @@ public class PersistentDB implements Database {
             }
         } catch (IOException e) {
             //todo handle
-            e.printStackTrace();
+            System.out.println("Creating new database");
         } catch (ClassNotFoundException e) {
             //todo handle
             System.out.println("Can't find the database");
@@ -42,6 +42,10 @@ public class PersistentDB implements Database {
 
     public String get(String[] key) {
         return this.storage.get(key);
+    }
+
+    public String[] getKeys(String[] key) {
+        return this.storage.getKeys(key);
     }
 
     public void remove(String[] key) {

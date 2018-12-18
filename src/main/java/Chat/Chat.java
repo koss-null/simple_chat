@@ -15,17 +15,20 @@ public class Chat {
 
             Database db = new PersistentDB();
             db.init();
-            db.set(new String[] {"a"}, "slon");
-            db.set(new String[] {"b"}, "mish");
-            db.set(new String[] {"c"}, "kon'");
+            db.set(new String[] {"users", "mike"}, "slon");
+            db.set(new String[] {"users", "rob"}, "mish");
+            db.set(new String[] {"users", "elthon"}, "kon'");
             db.set(new String[] {"a", "b"}, "vorobey");
 
             db.store();
-
-            db.init();
-            System.out.println(db.get(new String[] {"a"}));
-            System.out.println(db.get(new String[] {"a", "b"}));
-            System.out.println(db.get(new String[] {"a", "c"}));
+            var users = db.getKeys(new String[] {"users"});
+            for (String user: users) {
+                System.out.println(user);
+            }
+            var as = db.getKeys(new String[] {"a"});
+            for (String user: as) {
+                System.out.println(user);
+            }
         } catch (Exception e) {
             //todo: make multiple catching of exceptions here
 
