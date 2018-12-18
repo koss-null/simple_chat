@@ -5,17 +5,19 @@ import Chat.Utils.Concurrent.Tree.KeyTree;
 import java.io.*;
 
 
-public class PersistentDB implements Database {
+public class PersistentDB<K extends Comparable<K>, V> implements Database<K, V> {
 
-    private String path = "/Users/d.kossovich/learning/simple_chat/var/persistent.db";
-    private KeyTree<String, String> storage = new KeyTree<>();
+    private String path;
+    private KeyTree<K, V> storage = new KeyTree<>();
 
-    public void init() {
+    public void init(String path) {
+        this.path = path;
+
         try (FileInputStream fileIn = new FileInputStream(path);
              ObjectInputStream in = new ObjectInputStream(fileIn)) {
             var obj = in.readObject();
             if (obj instanceof KeyTree) {
-                this.storage = (KeyTree<String, String>) obj;
+                this.storage = (KeyTree<K, V>) obj;
             }
         } catch (IOException e) {
             //todo handle
@@ -36,24 +38,24 @@ public class PersistentDB implements Database {
         }
     }
 
-    public void set(String[] key, String val) {
+    public void set(K[] key, V val) {
         this.storage.set(key, val);
     }
 
-    public String get(String[] key) {
+    public V get(K[] key) {
         return this.storage.get(key);
     }
 
-    public String[] getKeys(String[] key) {
+    public K[] getKeys(K[] key) {
         return this.storage.getKeys(key);
     }
 
-    public void remove(String[] key) {
+    public void remove(K[] key) {
         // todo: tbd
     }
 
-    public void change(String[] key, String val) {
+    public void change(K[] key, V val) {
         // todo: need to check if the key is present
-        this.storage.set(key,val);
+        this.storage.set(key, val);
     }
 }

@@ -13,20 +13,13 @@ public class Chat {
             Logger error = Logger.getLogger("ERROR");
             Logger debug = Logger.getLogger("DEBUG");
 
-            Database db = new PersistentDB();
-            db.init();
-            db.set(new String[] {"users", "mike"}, "slon");
-            db.set(new String[] {"users", "rob"}, "mish");
-            db.set(new String[] {"users", "elthon"}, "kon'");
-            db.set(new String[] {"a", "b"}, "vorobey");
+            Database db = new PersistentDB<String, String>();
+            db.init("/Users/d.kossovich/learning/simple_chat/var/persistent.db");
+            var users = (String[]) db.getKeys(new String[] {"users"});
 
             db.store();
-            var users = db.getKeys(new String[] {"users"});
+
             for (String user: users) {
-                System.out.println(user);
-            }
-            var as = db.getKeys(new String[] {"a"});
-            for (String user: as) {
                 System.out.println(user);
             }
         } catch (Exception e) {
