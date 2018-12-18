@@ -11,7 +11,7 @@ public class Message implements Serializable {
     Encryption encriptionType;
     User sender;
     User recipient;
-    UUID chatId;
+    UUID groupId;
 
     public static String PrivateKey = "private";
     public static String ChatKey = "chat";
@@ -21,19 +21,19 @@ public class Message implements Serializable {
             Encryption encriptionType,
             User sender,
             User recipient,
-            UUID chatId) {
+            UUID groupId) {
 
         this.text = text;
         this.encriptionType = encriptionType;
         this.sender = sender;
         this.recipient = recipient;
-        this.chatId = chatId;
+        this.groupId = groupId;
     }
 
     public String[] getKey() {
         if (this.recipient != null) {
             return new String[]{PrivateKey, this.recipient.id.toString()};
         }
-        return new String[]{ChatKey, this.chatId.toString()};
+        return new String[]{ChatKey, this.groupId.toString()};
     }
 }
