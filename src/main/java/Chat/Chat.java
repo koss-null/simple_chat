@@ -2,6 +2,8 @@ package Chat;
 
 import Chat.Database.Database;
 import Chat.Database.PersistentDB;
+import Chat.Message.Message;
+import Chat.User.User;
 
 import java.util.logging.Logger;
 
@@ -13,15 +15,15 @@ public class Chat {
             Logger error = Logger.getLogger("ERROR");
             Logger debug = Logger.getLogger("DEBUG");
 
-            Database db = new PersistentDB<String, String>();
-            db.init("/Users/d.kossovich/learning/simple_chat/var/persistent.db");
-            var users = (String[]) db.getKeys(new String[] {"users"});
+            Database usersDB = new PersistentDB<String, User>();
+            usersDB.init("/Users/d.kossovich/learning/simple_chat/var/users.db");
+            Database mailDB = new PersistentDB<String, Message>();
+            mailDB.init("/Users/d.kossovich/learning/simple_chat/var/mail.db");
 
-            db.store();
 
-            for (String user: users) {
-                System.out.println(user);
-            }
+
+            usersDB.store();
+            mailDB.store();
         } catch (Exception e) {
             //todo: make multiple catching of exceptions here
 
