@@ -1,26 +1,28 @@
 package Chat.Database;
 
-import Chat.Utils.Concurrent.Tree.BinaryTree;
+import Chat.Utils.Concurrent.Tree.KeyTree;
 
 import java.io.*;
 
 
 public class PersistentDB implements Database {
 
-    private String path = "/var/persistent.db";
-    private BinaryTree<String, String> storage = new BinaryTree<>();
+    private String path = "/Users/d.kossovich/learning/simple_chat/var/persistent.db";
+    private KeyTree<String, String> storage = new KeyTree<>();
 
     public void init() {
         try (FileInputStream fileIn = new FileInputStream(path);
              ObjectInputStream in = new ObjectInputStream(fileIn)) {
             var obj = in.readObject();
-            if (obj instanceof  BinaryTree) {
-                this.storage = (BinaryTree<String, String>) obj;
+            if (obj instanceof KeyTree) {
+                this.storage = (KeyTree<String, String>) obj;
             }
         } catch (IOException e) {
             //todo handle
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
             //todo handle
+            System.out.println("Can't find the database");
         }
     }
 
@@ -34,15 +36,19 @@ public class PersistentDB implements Database {
         }
     }
 
-    public void set(String key, String val) {
+    public void set(String[] key, String val) {
         this.storage.set(key, val);
     }
 
-    public void remove(String key) {
+    public String get(String[] key) {
+        return this.storage.get(key);
+    }
+
+    public void remove(String[] key) {
         // todo: tbd
     }
 
-    public void change(String key, String val) {
+    public void change(String[] key, String val) {
         // todo: need to check if the key is present
         this.storage.set(key,val);
     }

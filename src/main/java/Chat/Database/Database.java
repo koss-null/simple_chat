@@ -8,7 +8,8 @@ public interface Database {
     // encrypts and stores all info
     void store();
 
-    void set(String key, String val);
-    void remove(String key);
-    void change(String key, String val);
+    void set(String[] key, String val);
+    String get(String[] key);
+    void remove(String[] key);
+    void change(String[] key, String val);
 }
