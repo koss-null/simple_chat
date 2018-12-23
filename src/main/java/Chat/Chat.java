@@ -21,7 +21,8 @@ public class Chat {
             Database mailDB = new PersistentDB<String, Message>();
             mailDB.init("/Users/d.kossovich/learning/simple_chat/var/mail.db");
 
-
+            CLI cli = new cli(usersDB, mailDB);
+            cli.start()
 
             usersDB.store();
             mailDB.store();

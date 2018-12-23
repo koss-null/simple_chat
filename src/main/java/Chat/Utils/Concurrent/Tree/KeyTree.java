@@ -44,11 +44,11 @@ public class KeyTree<K extends Comparable<K>, V> implements Tree<K, V>, Serializ
 
         var curHead = this.zeroLevel;
         int level = 0;
-        boolean wasAquired = false;
+        boolean wasAcquired = false;
 
         try {
             this.semaphore.acquire();
-            wasAquired = true;
+            wasAcquired = true;
 
             while (true) {
                 boolean foundKey = false;
@@ -88,7 +88,7 @@ public class KeyTree<K extends Comparable<K>, V> implements Tree<K, V>, Serializ
                     )
             );
         } finally {
-            if (wasAquired) {
+            if (wasAcquired) {
                 this.semaphore.release();
             }
         }
@@ -100,11 +100,11 @@ public class KeyTree<K extends Comparable<K>, V> implements Tree<K, V>, Serializ
 
         List<TreeElement> curHead = this.zeroLevel;
         int level = 0;
-        boolean wasAquired = false;
+        boolean wasAcquired = false;
 
         try {
             this.semaphore.acquire();
-            wasAquired = true;
+            wasAcquired = true;
 
             while (level < key.length) {
                 if (curHead == null) {
@@ -138,7 +138,7 @@ public class KeyTree<K extends Comparable<K>, V> implements Tree<K, V>, Serializ
             );
             return null;
         } finally {
-            if (wasAquired) {
+            if (wasAcquired) {
                 this.semaphore.release();
             }
         }
@@ -152,11 +152,11 @@ public class KeyTree<K extends Comparable<K>, V> implements Tree<K, V>, Serializ
 
         List<TreeElement> curHead = this.zeroLevel;
         int level = 0;
-        boolean wasAquired = false;
+        boolean wasAcquired = false;
 
         try {
             this.semaphore.acquire();
-            wasAquired = true;
+            wasAcquired = true;
 
             while (level < key.length) {
                 if (curHead == null) {
@@ -197,7 +197,7 @@ public class KeyTree<K extends Comparable<K>, V> implements Tree<K, V>, Serializ
             );
             return null;
         } finally {
-            if (wasAquired) {
+            if (wasAcquired) {
                 this.semaphore.release();
             }
         }
