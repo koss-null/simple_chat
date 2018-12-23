@@ -1,5 +1,6 @@
 package Chat;
 
+import Chat.CLI.CLI;
 import Chat.Database.Database;
 import Chat.Database.PersistentDB;
 import Chat.Message.Message;
@@ -21,8 +22,8 @@ public class Chat {
             Database mailDB = new PersistentDB<String, Message>();
             mailDB.init("/Users/d.kossovich/learning/simple_chat/var/mail.db");
 
-            CLI cli = new cli(usersDB, mailDB);
-            cli.start()
+            CLI cli = new CLI(usersDB, mailDB);
+            cli.start();
 
             usersDB.store();
             mailDB.store();

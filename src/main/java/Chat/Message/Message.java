@@ -18,13 +18,13 @@ public class Message implements Serializable {
 
     public Message(
             String text,
-            Encryption encriptionType,
+            Encryption encryptionType,
             User sender,
             User recipient,
             UUID groupId) {
 
         this.text = text;
-        this.encriptionType = encriptionType;
+        this.encriptionType = encryptionType;
         this.sender = sender;
         this.recipient = recipient;
         this.groupId = groupId;
