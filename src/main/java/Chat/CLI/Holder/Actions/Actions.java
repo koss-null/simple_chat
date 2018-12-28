@@ -33,7 +33,13 @@ public class Actions {
         System.out.print("Password: ");
         var pass = input.next();
 
-        String[] keys = (String[]) users.getKeys(new String[]{"users"});
+        Object ks = users.getKeys(new String[]{"users"});
+        if (ks == null) {
+            System.out.println("There are no created users yet");
+            return LoginState.FAILED;
+        }
+        String[] keys = (String[]) ks;
+
         var logOk = false;
         User user;
         for (String key: keys) {
