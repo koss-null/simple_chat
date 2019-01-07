@@ -22,6 +22,7 @@ public class PersistentDB<K extends Comparable<K>, V> implements Database<K, V> 
         } catch (IOException e) {
             //todo handle
             System.out.println("Creating new database");
+            this.store();
         } catch (ClassNotFoundException e) {
             //todo handle
             System.out.println("Can't find the database");
