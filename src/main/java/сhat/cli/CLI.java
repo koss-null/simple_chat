@@ -12,6 +12,10 @@ public class CLI {
     private static final String HELP = "::help";
     private static final String EXIT = "::exit";
 
+    private static final String MAN = "Type:\n"
+            + HELP + " to get available commands,\n"
+            + EXIT + " to quit";
+
     private final Database userDB;
     private final Database mailDB;
 
@@ -23,8 +27,10 @@ public class CLI {
     // there is a strange fitch here:
     // if an action contains autoNext there is no way to use keywords
     public void start() {
+        System.out.println(MAN);
+
         boolean exit = false;
-        Command[] currentPossibleCmd = Holder.commands;
+        Command[] currentPossibleCmds = Holder.commands;
 
         Scanner input = new Scanner(System.in);
         while (!exit) {
@@ -32,8 +38,8 @@ public class CLI {
             // checking keywords
             switch (cmd) {
                 case HELP: //":help"
-                    for (var command: currentPossibleCmd) {
-                        System.out.println(command.getCmd() + "\t" + command.getDescription());
+                    for (var command: currentPossibleCmds) {
+                        System.out.println(command.getCmd() + ":\t:" + command.getDescription());
                     }
                     break;
                 case EXIT:
@@ -42,13 +48,11 @@ public class CLI {
             }
             if (exit) {break;}
 
-            for (var command: currentPossibleCmd) {
+            for (var command: currentPossibleCmds) {
                 if (command.getCmd().equals(cmd)) {
                     var res = command.acquire();
                     if (!res.equals("")) {
                         System.out.println(res);
-                        // todo: think about how it should chose the next action
-                        // (possibly it should be solved using ringed links in holder code)
                     }
 
                     while (command.autoNext != null) {
@@ -56,13 +60,13 @@ public class CLI {
                         res = command.acquire();
                         if (!res.equals("")) {
                             System.out.println(res);
-                            // todo: think about how it should chose the next action
-                            // (possibly it should be solved using ringed links in holder code)
                         }
                     }
 
+                    // here it's possible to have some ringed links
+                    // to make an infinite state machine of actions
                     if (command.next != null) {
-                        currentPossibleCmd = command.next;
+                        currentPossibleCmds = command.next;
                     }
 
                     break;

@@ -10,9 +10,6 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Actions {
-    public enum LoginState{
-        OK, FAILED
-    }
 
     public static void server() throws IOException {
         Server server = new Server();
@@ -24,7 +21,7 @@ public class Actions {
         System.out.println("client was chosen");
     }
 
-    public static LoginState login(Database users) throws IOException {
+    public static User login(Database users) throws IOException {
         Scanner input = new Scanner(System.in);
 
         System.out.println("Please, enter your");
@@ -36,24 +33,22 @@ public class Actions {
         Object ks = users.getKeys(new String[]{"users"});
         if (ks == null) {
             System.out.println("There are no created users yet");
-            return LoginState.FAILED;
+            return null;
         }
         String[] keys = (String[]) ks;
 
-        var logOk = false;
-        User user;
+        User user = null;
         for (String key: keys) {
             var u = (User) users.get(new String[] {"users", key});
             if (u.name.equals(name) && u.pass.equals(pass)) {
-                logOk = true;
                 user = u;
                 break;
             }
         }
 
-        if (!logOk) { return LoginState.FAILED; }
+        // todo : client need to be initialised somewhere else
         Client client = new Client();
 
-        return LoginState.OK;
+        return user;
     }
 }
