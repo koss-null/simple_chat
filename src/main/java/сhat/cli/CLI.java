@@ -30,6 +30,7 @@ public class CLI {
         System.out.println(MAN);
 
         boolean exit = false;
+        Holder.init(userDB, mailDB);
         Command[] currentPossibleCmds = Holder.commands;
 
         Scanner input = new Scanner(System.in);
@@ -48,8 +49,11 @@ public class CLI {
             }
             if (exit) {break;}
 
+            var wasAcquired = false;
             for (var command: currentPossibleCmds) {
                 if (command.getCmd().equals(cmd)) {
+                    wasAcquired = true;
+
                     var res = command.acquire();
                     if (!res.equals("")) {
                         System.out.println(res);
@@ -71,6 +75,10 @@ public class CLI {
 
                     break;
                 }
+            }
+
+            if (!wasAcquired) {
+                System.out.println("There is no such command, type " + HELP + " to see the command list");
             }
         }
     }

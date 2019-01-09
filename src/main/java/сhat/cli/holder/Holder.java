@@ -77,11 +77,19 @@ public class Holder {
                         Actions.client();
                         return "";
                     },
-                    login
+                    new Command[] {
+                        login,
+                        new Command(
+                            "log on",
+                            "add a new user",
+                            () -> "",
+                            login
+                        )
+                    }
             ),
     };
 
-    public Holder (Database userDB, Database messageDB) {
+    public static void init(Database userDB, Database messageDB) {
         Holder.userDB = userDB;
         Holder.messageDB = messageDB;
     }
