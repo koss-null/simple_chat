@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class Client {
     private String serverHost = "127.0.0.1";
@@ -22,7 +23,18 @@ public class Client {
 
     // todo: it's a STUB, need to be changed
     public void send(String msg) throws IOException {
-        output.writeUTF(msg);
+        output.write(msg.getBytes(StandardCharsets.UTF_8));
+    }
+
+    // returns true if exist
+    public boolean checkLoginExist(String login) {
+        // fixme
+        return false;
+    }
+
+    public boolean addUser(String login, String pass) {
+        // fixme
+        return true;
     }
 
     public void setServerHost(String host) {

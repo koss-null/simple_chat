@@ -1,38 +1,47 @@
 package сhat.server;
 
+import сhat.database.Database;
 import сhat.server.handler.Handler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
-    private static int Port = 999;
+    private static int Port = 9090;
 
     private final static List<Handler> activeClients = new ArrayList<>();
     static public List<Handler> getActiveClients() {
         return activeClients;
     }
 
-    public void start() throws IOException {
-        ServerSocket server = new ServerSocket(Server.Port);
+    private final Database userDb;
+    private final Database mailDb;
 
-        boolean done = false;
-        while (!done) {
-            try {
-                Socket request = server.accept();
-                Handler handler = new Handler(request);
+    public Server(Database userDb, Database mailDb) {
+        System.out.println("initialising server for DEFAULT port: " + Port);
+        this.userDb = userDb;
+        this.mailDb = mailDb;
+    }
 
-                Thread t = new Thread(handler);
-                activeClients.add(handler);
-                t.start();
-            } catch (IOException e) {
-                //todo: fixit
-                e.printStackTrace();
-                done = true;
+    public void start() {
+        try (ServerSocket server = new ServerSocket(Server.Port)) {
+            boolean done = false;
+            while (!done) {
+                try {
+                    Handler handler = new Handler(server.accept(), userDb, mailDb);
+                    handler.start();
+                    activeClients.add(handler);
+                } catch (IOException e) {
+                    System.out.println("Server failed, please restart or connect to a project owner to fix the problem");
+                    e.printStackTrace();
+                    done = true;
+                }
             }
+        } catch (IOException e) {
+            System.out.println("Server failed, please restart or connect to a project owner to fix the problem");
+            e.printStackTrace();
         }
     }
 

@@ -62,11 +62,7 @@ public class Holder {
                     "server",
                     "creates server",
                     () -> {
-                        try {
-                            Actions.server();
-                        } catch (IOException e) {
-                            return ("Some troubles have been arisen due the server startup.\n" + e.toString());
-                        }
+                        Actions.server(userDB, messageDB);
                         return "";
                     }),
 
@@ -80,10 +76,25 @@ public class Holder {
                     new Command[] {
                         login,
                         new Command(
-                            "log on",
+                            "logon",
                             "add a new user",
-                            () -> "",
+                            () -> {
+                                boolean success = Actions.logOn();
+                                if (!success) {
+                                    return "Login failed";
+                                }
+                                return "";
+                            },
                             login
+                        ),
+                        // todo remove it
+                        new Command(
+                                "send",
+                                "sending a message to a server",
+                                () -> {
+                                    Actions.send();
+                                    return "";
+                                }
                         )
                     }
             ),

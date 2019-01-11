@@ -1,36 +1,45 @@
 package сhat.server.handler;
 
-import сhat.server.Server;
+import сhat.database.Database;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.UUID;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
-public class Handler implements Runnable {
-    final DataInputStream input;
-    final DataOutputStream output;
-    UUID id;
+public class Handler extends Thread {
+    private static final int MAX_MSG_LENGTH = 1024;
 
-    public Handler(Socket socket) throws IOException {
+    private final DataInputStream input;
+    private final DataOutputStream output;
+
+    private final Database userDb;
+    private final Database mailDb;
+
+    public Handler(Socket socket, Database userDb, Database mailDb) throws IOException {
         this.input = new DataInputStream(socket.getInputStream());
         this.output = new DataOutputStream(socket.getOutputStream());
+
+        this.userDb = userDb;
+        this.mailDb = mailDb;
     }
 
     @Override
     public void run() {
+        System.out.println("Started a new handler, waiting a client message");
+
         boolean done = false;
         while (!done) {
+            byte[] msgBytes = new byte[MAX_MSG_LENGTH];
             try {
-                String message = input.readUTF();
-                System.out.println("got msg: " + message);
-
-                for (var client : Server.getActiveClients()) {
-                    // here we'r sending message to a client with the id in the recipients
-                }
+                int length = input.read(msgBytes);
+                var message = Arrays.copyOfRange(msgBytes, 0, length);
+                System.out.println("got msg: " + new String(message, StandardCharsets.UTF_8));
             } catch (IOException e) {
-                // todo: fixit
+                System.out.println("Some troubles with the server, please restart " +
+                        "or contact with the product owner to fix the problem");
                 e.printStackTrace();
                 done = true;
             }

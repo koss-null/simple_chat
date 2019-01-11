@@ -36,17 +36,20 @@ public class CLI {
         Scanner input = new Scanner(System.in);
         while (!exit) {
             var cmd = input.next();
+            boolean help = false;
             // checking keywords
             switch (cmd) {
                 case HELP: //":help"
                     for (var command: currentPossibleCmds) {
                         System.out.println(command.getCmd() + ":\t:" + command.getDescription());
                     }
+                    help = true;
                     break;
                 case EXIT:
                     exit = true;
                     break;
             }
+            if (help) {continue;}
             if (exit) {break;}
 
             var wasAcquired = false;
