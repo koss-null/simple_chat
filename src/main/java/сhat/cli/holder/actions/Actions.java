@@ -67,7 +67,7 @@ public class Actions {
     public static boolean logOn() {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Please, enter your (type " + QUIT + " if you decided to quit)");
+        System.out.println("Please, enter your (requesttype " + QUIT + " if you decided to quit)");
         System.out.print("Login: ");
         boolean exist = true;
         String login = "";

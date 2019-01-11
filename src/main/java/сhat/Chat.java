@@ -3,7 +3,7 @@ package сhat;
 import сhat.cli.CLI;
 import сhat.database.Database;
 import сhat.database.PersistentDB;
-import сhat.message.Message;
+import messages.message.Message;
 import сhat.user.User;
 
 public class Chat {

@@ -12,7 +12,7 @@ public class CLI {
     private static final String HELP = "::help";
     private static final String EXIT = "::exit";
 
-    private static final String MAN = "Type:\n"
+    private static final String MAN = "ResponseType:\n"
             + HELP + " to get available commands,\n"
             + EXIT + " to quit";
 
@@ -81,7 +81,7 @@ public class CLI {
             }
 
             if (!wasAcquired) {
-                System.out.println("There is no such command, type " + HELP + " to see the command list");
+                System.out.println("There is no such command, requesttype " + HELP + " to see the command list");
             }
         }
     }

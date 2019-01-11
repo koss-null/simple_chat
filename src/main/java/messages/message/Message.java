@@ -1,17 +1,17 @@
-package сhat.message;
+package messages.message;
 
-import сhat.message.encryption.Encryption;
+import messages.message.encryption.Encryption;
 import сhat.user.User;
 
 import java.io.Serializable;
 import java.util.UUID;
 
 public class Message implements Serializable {
-    String text;
-    Encryption encriptionType;
-    User sender;
-    User recipient;
-    UUID groupId;
+    public String text;
+    public Encryption encriptionType;
+    public User sender;
+    public User recipient;
+    public UUID groupId;
 
     public static String PrivateKey = "private";
     public static String ChatKey = "chat";

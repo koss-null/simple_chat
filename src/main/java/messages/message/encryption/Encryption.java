@@ -1,4 +1,4 @@
-package сhat.message.encryption;
+package messages.message.encryption;
 
 public enum Encryption {
     NONE,
