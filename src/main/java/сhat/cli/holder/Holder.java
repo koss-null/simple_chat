@@ -64,7 +64,12 @@ public class Holder {
                     () -> {
                         Actions.server(userDB, messageDB);
                         return "";
-                    }),
+                    },
+                    new Command(
+                            "exit",
+                            "finishes the server",
+                            () -> { System.exit(0); return ""; }
+                    )),
 
             new Command(
                     "client",

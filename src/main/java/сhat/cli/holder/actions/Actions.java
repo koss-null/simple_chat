@@ -16,7 +16,7 @@ public class Actions {
 
     public static void server(Database userDb, Database mailDb) {
         Server server = new Server(userDb, mailDb);
-        server.start();
+        new Thread(server).start();
         CLI.isServer = true;
     }
 
