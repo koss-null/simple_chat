@@ -12,8 +12,9 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-import static messages.requesttype.RequestType.LOGIN_CHECK;
-import static messages.requesttype.RequestType.LOGIN_REGISTER;
+import static messages.requesttype.RequestType.*;
+import static messages.responsetype.ResponseType.INCOMING_MESSAGE;
+import static messages.responsetype.ResponseType.SERVICE_MESSAGE;
 
 /**
  * client performs an interaction with the server using the following protocol:
@@ -67,6 +68,41 @@ public class Client {
         }
 
         return false;
+    }
+
+    public User checkRegistration(String login, String pass) {
+        Request req = new Request(REGISTER_CHECK);
+        req.message = new Message(
+                "",
+                Encryption.NONE,
+                new User(login, pass, Type.REGULAR),
+                null,
+                null
+        );
+        try (ObjectOutputStream out = new ObjectOutputStream(output)) {
+            out.writeObject(req);
+        } catch (IOException e) {
+            // todo handle
+            System.out.println("can't create an object output stream");
+        }
+
+        try (ObjectInputStream in = new ObjectInputStream(input)) {
+            var resp = (Response)in.readObject();
+            if (resp.type == INCOMING_MESSAGE) {
+                return resp.message.sender;
+            } else if (resp.type == SERVICE_MESSAGE) {
+                System.out.println(resp.service);
+            }
+            return null;
+        } catch (IOException e) {
+            // todo handle
+            System.out.println("can't create an object output stream");
+        } catch (ClassNotFoundException e) {
+            // todo handle
+            System.out.println("deserialization error");
+        }
+
+        return null;
     }
 
     public boolean addUser(String login, String pass) {
