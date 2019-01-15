@@ -30,8 +30,21 @@ public class Client {
 
     public Client() throws IOException {
         socket = new Socket(serverHost, Server.getPort());
-        input = new ObjectInputStream(socket.getInputStream());
-        output = new ObjectOutputStream(socket.getOutputStream());
+        try {
+            input = new ObjectInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            System.out.println("Input failed");
+            e.printStackTrace();
+            throw e;
+        }
+        try {
+            output = new ObjectOutputStream(socket.getOutputStream());
+            output.flush();
+        } catch (IOException e) {
+            System.out.println("Output failed");
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     // todo: it's a STUB, need to be changed

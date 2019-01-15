@@ -21,8 +21,9 @@ public class Handler extends Thread {
     private final Database mailDb;
 
     public Handler(Socket socket, Database userDb, Database mailDb) throws IOException {
-        this.input = new ObjectInputStream(new DataInputStream(socket.getInputStream()));
         this.output = new ObjectOutputStream(socket.getOutputStream());
+        this.output.flush();
+        this.input = new ObjectInputStream(new DataInputStream(socket.getInputStream()));
 
         this.userDb = userDb;
         this.mailDb = mailDb;

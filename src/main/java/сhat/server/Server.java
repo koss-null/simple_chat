@@ -32,8 +32,7 @@ public class Server implements Runnable {
             while (!done) {
                 try {
                     Handler handler = new Handler(server.accept(), userDb, mailDb);
-                    Thread t = new Thread(handler);
-                    t.start();
+                    new Thread(handler).start();
                     activeClients.add(handler);
                 } catch (IOException e) {
                     System.out.println("Some handler have been broken");
