@@ -25,13 +25,13 @@ public class Client {
     private String serverHost = "127.0.0.1";
 
     private Socket socket;
-    private DataInputStream input;
-    private DataOutputStream output;
+    private ObjectInputStream input;
+    private ObjectOutputStream output;
 
     public Client() throws IOException {
         socket = new Socket(serverHost, Server.getPort());
-        input = new DataInputStream(socket.getInputStream());
-        output = new DataOutputStream(socket.getOutputStream());
+        input = new ObjectInputStream(socket.getInputStream());
+        output = new ObjectOutputStream(socket.getOutputStream());
     }
 
     // todo: it's a STUB, need to be changed
@@ -49,15 +49,15 @@ public class Client {
             null,
             null
         );
-        try (ObjectOutputStream out = new ObjectOutputStream(output)) {
-            out.writeObject(req);
+        try {
+            output.writeObject(req);
         } catch (IOException e) {
             // todo handle
             System.out.println("can't create an object output stream");
         }
 
-        try (ObjectInputStream in = new ObjectInputStream(input)) {
-            var resp = (Response)in.readObject();
+        try {
+            var resp = (Response) input.readObject();
             return resp.ok;
         } catch (IOException e) {
             // todo handle
@@ -79,19 +79,20 @@ public class Client {
                 null,
                 null
         );
-        try (ObjectOutputStream out = new ObjectOutputStream(output)) {
-            out.writeObject(req);
+        try {
+            output.writeObject(req);
         } catch (IOException e) {
             // todo handle
             System.out.println("can't create an object output stream");
         }
 
-        try (ObjectInputStream in = new ObjectInputStream(input)) {
-            var resp = (Response)in.readObject();
+        try {
+            var resp = (Response) input.readObject();
             if (resp.type == INCOMING_MESSAGE) {
                 return resp.message.sender;
             } else if (resp.type == SERVICE_MESSAGE) {
                 System.out.println(resp.service);
+                return null;
             }
             return null;
         } catch (IOException e) {

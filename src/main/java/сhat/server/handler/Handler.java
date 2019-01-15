@@ -14,15 +14,15 @@ import java.io.*;
 import java.net.Socket;
 
 public class Handler extends Thread {
-    private final DataInputStream input;
-    private final DataOutputStream output;
+    private final ObjectInputStream input;
+    private final ObjectOutputStream output;
 
     private final Database userDb;
     private final Database mailDb;
 
     public Handler(Socket socket, Database userDb, Database mailDb) throws IOException {
-        this.input = new DataInputStream(socket.getInputStream());
-        this.output = new DataOutputStream(socket.getOutputStream());
+        this.input = new ObjectInputStream(new DataInputStream(socket.getInputStream()));
+        this.output = new ObjectOutputStream(socket.getOutputStream());
 
         this.userDb = userDb;
         this.mailDb = mailDb;
@@ -65,15 +65,15 @@ public class Handler extends Thread {
 
         boolean done = false;
         while (!done) {
-            try (ObjectInputStream in = new ObjectInputStream(input)) {
-                var req = (Request) in.readObject();
+            try {
+                var req = (Request) input.readObject();
                 switch (req.type) {
                     case LOGIN_CHECK: {
                         var exist = checkLogin(req.message.sender.name);
                         Response resp = new Response(ResponseType.BOOLEAN_RESPONSE, exist);
 
-                        try (ObjectOutputStream out = new ObjectOutputStream(output)) {
-                            out.writeObject(resp);
+                        try {
+                            output.writeObject(resp);
                         } catch (IOException e) {
                             // todo handle
                             System.out.println("can't create an object output stream");
@@ -84,8 +84,8 @@ public class Handler extends Thread {
                         var ok = loginRegister(req.message.sender.name, req.message.sender.pass);
                         Response resp = new Response(ResponseType.BOOLEAN_RESPONSE, ok);
 
-                        try (ObjectOutputStream out = new ObjectOutputStream(output)) {
-                            out.writeObject(resp);
+                        try {
+                            output.writeObject(resp);
                         } catch (IOException e) {
                             // todo handle
                             System.out.println("can't create an object output stream");
@@ -107,8 +107,8 @@ public class Handler extends Thread {
                             );
                         }
 
-                        try (ObjectOutputStream out = new ObjectOutputStream(output)) {
-                            out.writeObject(resp);
+                        try {
+                            output.writeObject(resp);
                         } catch (IOException e) {
                             // todo handle
                             System.out.println("can't create an object output stream");
