@@ -19,17 +19,17 @@ public class Holder {
             "chat",
             "a stub to start chat when user is logged in",
             () -> "",
-            new Command[] {
-                new Command(
-                    "list",
-                    "shows all avalible chats",
-                        () -> ""
-                ),
-                new Command(
-                        "new",
-                        "create new personal or group chat",
-                        () -> ""
-                ),
+            new Command[]{
+                    new Command(
+                            "list",
+                            "shows all avalible chats",
+                            () -> ""
+                    ),
+                    new Command(
+                            "new",
+                            "create new personal or group chat",
+                            () -> ""
+                    ),
             }
     );
 
@@ -65,11 +65,14 @@ public class Holder {
                         Actions.server(userDB, messageDB);
                         return "";
                     },
-                    new Command(
+                    new Command[]{new Command(
                             "exit",
                             "finishes the server",
-                            () -> { System.exit(0); return ""; }
-                    )),
+                            () -> {
+                                System.exit(0);
+                                return "";
+                            }
+                    )}),
 
             new Command(
                     "client",
@@ -78,29 +81,29 @@ public class Holder {
                         Actions.client();
                         return "";
                     },
-                    new Command[] {
-                        login,
-                        new Command(
-                            "logon",
-                            "add a new user",
-                            () -> {
-                                boolean success = Actions.logOn();
-                                if (!success) {
-                                    return "Login failed";
-                                }
-                                return "";
-                            },
-                            login
-                        ),
-                        // todo remove it
-                        new Command(
-                                "send",
-                                "sending a message to a server",
-                                () -> {
-                                    Actions.send();
-                                    return "";
-                                }
-                        )
+                    new Command[]{
+                            login,
+                            new Command(
+                                    "logon",
+                                    "add a new user",
+                                    () -> {
+                                        boolean success = Actions.logOn();
+                                        if (!success) {
+                                            return "Login failed";
+                                        }
+                                        return "";
+                                    },
+                                    login
+                            ),
+                            // todo remove it
+                            new Command(
+                                    "send",
+                                    "sending a message to a server",
+                                    () -> {
+                                        Actions.send();
+                                        return "";
+                                    }
+                            )
                     }
             ),
     };
