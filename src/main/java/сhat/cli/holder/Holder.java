@@ -13,8 +13,6 @@ public class Holder {
 
     private static User currentUser = null;
 
-    private static Command afterLogin = null;
-
     private static Command chat = new Command(
             "chat",
             "a stub to start chat when user is logged in",
@@ -51,8 +49,7 @@ public class Holder {
                     } catch (IOException e) {
                         return "Some troubles while logging.\n" + e.toString();
                     }
-                },
-                afterLogin
+                }
         );
     }
 
