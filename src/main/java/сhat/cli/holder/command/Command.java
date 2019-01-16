@@ -6,8 +6,8 @@ public class Command {
     private final String cmd;
     private final String description;
     private final Supplier<String> action;
-    public final Command[] next;
-    public final Command autoNext;
+    public Command[] next;
+    public Command autoNext;
 
     public Command(final String cmd, final String description, Supplier<String> action) {
         this.cmd = cmd;

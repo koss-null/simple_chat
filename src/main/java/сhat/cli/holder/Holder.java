@@ -42,10 +42,10 @@ public class Holder {
                     try {
                         currentUser = Actions.login(Holder.userDB);
                         if (currentUser == null) {
-                            afterLogin = login;
+                            login.autoNext = login;
                             return "Wrong login or password";
                         }
-                        afterLogin = chat;
+                        login.autoNext = chat;
                         System.out.println("Successfully logged in");
                         return "";
                     } catch (IOException e) {
