@@ -75,6 +75,7 @@ public class Handler extends Thread {
 
                         try {
                             output.writeObject(resp);
+                            output.flush();
                         } catch (IOException e) {
                             // todo handle
                             System.out.println("can't create an object output stream");
@@ -87,6 +88,7 @@ public class Handler extends Thread {
 
                         try {
                             output.writeObject(resp);
+                            output.flush();
                         } catch (IOException e) {
                             // todo handle
                             System.out.println("can't create an object output stream");
@@ -110,9 +112,10 @@ public class Handler extends Thread {
 
                         try {
                             output.writeObject(resp);
+                            output.flush();
                         } catch (IOException e) {
                             // todo handle
-                            System.out.println("can't create an object output stream");
+                            System.out.println("can't handle an object output stream");
                         }
                         break;
                     }

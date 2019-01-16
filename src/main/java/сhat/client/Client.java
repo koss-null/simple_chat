@@ -64,9 +64,10 @@ public class Client {
         );
         try {
             output.writeObject(req);
+            output.flush();
         } catch (IOException e) {
             // todo handle
-            System.out.println("can't create an object output stream");
+            System.out.println("can't handle an object output stream");
         }
 
         try {
@@ -74,7 +75,7 @@ public class Client {
             return resp.ok;
         } catch (IOException e) {
             // todo handle
-            System.out.println("can't create an object output stream");
+            System.out.println("can't handle an object output stream");
         } catch (ClassNotFoundException e) {
             // todo handle
             System.out.println("deserialization error");
@@ -94,9 +95,10 @@ public class Client {
         );
         try {
             output.writeObject(req);
+            output.flush();
         } catch (IOException e) {
             // todo handle
-            System.out.println("can't create an object output stream");
+            System.out.println("can't handle an object output stream");
         }
 
         try {
@@ -128,19 +130,20 @@ public class Client {
                 null,
                 null
         );
-        try (ObjectOutputStream out = new ObjectOutputStream(output)) {
-            out.writeObject(req);
+        try {
+            output.writeObject(req);
+            output.flush();
         } catch (IOException e) {
             // todo handle
-            System.out.println("can't create an object output stream");
+            System.out.println("can't handle an object output stream");
         }
 
-        try (ObjectInputStream in = new ObjectInputStream(input)) {
-            var resp = (Response)in.readObject();
+        try {
+            var resp = (Response) input.readObject();
             return resp.ok;
         } catch (IOException e) {
             // todo handle
-            System.out.println("can't create an object output stream");
+            System.out.println("can't handle an object output stream");
         } catch (ClassNotFoundException e) {
             // todo handle
             System.out.println("deserialization error");

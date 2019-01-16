@@ -166,7 +166,7 @@ public class KeyTree<K extends Comparable<K>, V> implements Tree<K, V>, Serializ
                 boolean found = false;
                 for  (TreeElement elem: curHead) {
                     if (elem.key.equals(key[level])) {
-                        if  (key.length - 1 == level) {
+                        if  (key.length - 2 == level) {
                             if (elem.nextLevel == null) {
                                 return null;
                             }
