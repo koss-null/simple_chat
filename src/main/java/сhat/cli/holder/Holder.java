@@ -93,8 +93,7 @@ public class Holder {
                                             return "Login failed";
                                         }
                                         return "";
-                                    },
-                                    login
+                                    }
                             ),
                     }
             ),

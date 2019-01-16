@@ -30,7 +30,7 @@ public class Handler extends Thread {
     }
 
     private boolean checkLogin(String login) {
-        var user = userDb.getKeys(new String[]{"users", login});
+        var user = userDb.get(new String[]{"users", login});
         return user != null;
     }
 
@@ -45,21 +45,18 @@ public class Handler extends Thread {
 
     // returns pair with the user and the status of pass check (false if isn't equals)
     private Pair<User, Boolean> registerCheck(String login, String pass) {
-        var user = (User[]) userDb.getKeys(new String[]{"users", login});
-        if (user == null || user.length == 0) {
+        var user = (User) userDb.get(new String[]{"users", login});
+        if (user == null) {
+            return new Pair<>(null, false);
+        }
+
+        if (user.name.equals(login) && user.pass.equals(pass)) {
+            return new Pair<>(user, true);
+        } else {
             return new Pair<>(null, true);
         }
-        for (var u : user) {
-            if (u.name.equals(login)) {
-                if (u.pass.equals(pass)) {
-                    return new Pair<>(u, true);
-                } else {
-                    return new Pair<>(null, false);
-                }
-            }
-        }
-        return new Pair<>(null, true);
     }
+
 
     @Override
     public void run() {
@@ -122,9 +119,8 @@ public class Handler extends Thread {
                     }
                 }
             } catch (IOException e) {
-                System.out.println("Some troubles with the server, please restart " +
-                        "or contact with the product owner to fix the problem");
-                e.printStackTrace();
+                System.out.println("It looks like one of the clients got off");
+                //e.printStackTrace();
                 done = true;
             } catch (ClassNotFoundException e) {
                 System.out.println("Some troubles with message deserialize");
