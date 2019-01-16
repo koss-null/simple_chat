@@ -37,6 +37,7 @@ public class Handler extends Thread {
     private boolean loginRegister(String login, String pass) {
         if (!checkLogin(login)) {
             userDb.set(new String[]{"users", login}, new User(login, pass, Type.REGULAR));
+            userDb.store();
             return true;
         }
         return false;

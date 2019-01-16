@@ -46,6 +46,7 @@ public class Holder {
                             return "Wrong login or password";
                         }
                         afterLogin = chat;
+                        System.out.println("Successfully logged in");
                         return "";
                     } catch (IOException e) {
                         return "Some troubles while logging.\n" + e.toString();
@@ -95,15 +96,6 @@ public class Holder {
                                     },
                                     login
                             ),
-                            // todo remove it
-                            new Command(
-                                    "send",
-                                    "sending a message to a server",
-                                    () -> {
-                                        Actions.send();
-                                        return "";
-                                    }
-                            )
                     }
             ),
     };
