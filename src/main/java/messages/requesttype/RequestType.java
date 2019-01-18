@@ -6,5 +6,7 @@ public enum RequestType {
 
     LOGIN_CHECK,
     REGISTER_CHECK,
-    LOGIN_REGISTER
+    LOGIN_REGISTER,
+
+    LIST_CHATS
 }

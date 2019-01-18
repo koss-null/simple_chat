@@ -13,25 +13,48 @@ public class Holder {
 
     private static User currentUser = null;
 
+    private static Command list = new Command(
+            "list",
+            "shows all avalible chats",
+            () -> {
+                Actions.getChatList(currentUser);
+                return "";
+            }
+    );
+
+    private static Command newChat = new Command(
+            "new",
+            "create new personal or group chat",
+            () -> {
+                Actions.newChat();
+                return "";
+            }
+    );
+
+    // initiates inside a constructor to get rid of ringed links
+    private static Command sendDialog;
+
+    private static Command enter = new Command(
+            "enter",
+            "enters chousen chat",
+            () -> {
+                // todo: implement
+                return "";
+            },
+            sendDialog
+    );
+
     private static Command chat = new Command(
             "chat",
             "a stub to start chat when user is logged in",
             () -> "",
             new Command[]{
-                    new Command(
-                            "list",
-                            "shows all avalible chats",
-                            () -> ""
-                    ),
-                    new Command(
-                            "new",
-                            "create new personal or group chat",
-                            () -> ""
-                    ),
+                    list,
+                    newChat,
+                    enter
             }
     );
 
-    // todo: check if it works as it was mentioned
     private static Command getLoginCommand() {
         return new Command(
                 "login",
@@ -55,49 +78,69 @@ public class Holder {
 
     private static Command login = getLoginCommand();
 
-    public static final Command[] commands = new Command[]{
-            new Command(
-                    "server",
-                    "creates server",
-                    () -> {
-                        Actions.server(userDB, messageDB);
-                        return "";
-                    },
-                    new Command[]{new Command(
-                            "exit",
-                            "finishes the server",
-                            () -> {
-                                System.exit(0);
-                                return "";
-                            }
-                    )}),
+    private static Command exit = new Command(
+            "exit",
+            "finishes the server",
+            () -> {
+                System.exit(0);
+                return "";
+            }
+    );
 
-            new Command(
-                    "client",
-                    "initiates a client creation",
-                    () -> {
-                        Actions.client();
-                        return "";
-                    },
-                    new Command[]{
-                            login,
-                            new Command(
-                                    "logon",
-                                    "add a new user",
-                                    () -> {
-                                        boolean success = Actions.logOn();
-                                        if (!success) {
-                                            return "Login failed";
-                                        }
-                                        return "";
-                                    }
-                            ),
-                    }
-            ),
+    private static Command server = new Command(
+            "server",
+            "creates server",
+            () -> {
+                Actions.server(userDB, messageDB);
+                return "";
+            },
+            new Command[]{exit}
+    );
+
+    private static Command logon = new Command(
+            "logon",
+            "add a new user",
+            () -> {
+                boolean success = Actions.logOn();
+                if (!success) {
+                    return "Login failed";
+                }
+                return "";
+            }
+    );
+
+    private static Command client = new Command(
+            "client",
+            "initiates a client creation",
+            () -> {
+                Actions.client();
+                return "";
+            },
+            new Command[]{
+                    login,
+                    logon
+            }
+    );
+
+    public static final Command[] commands = new Command[]{
+            server,
+            client
     };
 
     public static void init(Database userDB, Database messageDB) {
         Holder.userDB = userDB;
         Holder.messageDB = messageDB;
+
+        sendDialog = new Command(
+                "dialog",
+                "implements chatting process",
+                // todo: implement
+                () -> "",
+                new Command[] {
+                        list,
+                        newChat,
+                        enter
+                }
+        );
     }
 }

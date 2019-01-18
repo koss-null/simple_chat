@@ -95,6 +95,27 @@ public class Actions {
         return true;
     }
 
+    public static void getChatList(User user) {
+        for (var chat : client.getChatList(user)) {
+            System.out.println(chat);
+        }
+    }
+
+    public static void getUserList() {
+        for (var user : client.getUserList()) {
+            System.out.println(user.name);
+        }
+    }
+
+    public static void newChat() {
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Enter the new chat or User name");
+        var name = input.nextLine().toLowerCase();
+
+        return true;
+    }
+
     // todo: to be removed
     public static void send() {
         System.out.println("enter your message");

@@ -4,17 +4,20 @@ import messages.message.Message;
 import messages.message.encryption.Encryption;
 import messages.request.Request;
 import messages.response.Response;
+import messages.responsetype.ResponseType;
+import сhat.client.pushhandler.PushHandler;
 import сhat.server.Server;
 import сhat.user.User;
 import сhat.user.type.Type;
 
+import javax.security.auth.callback.CallbackHandler;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import static messages.requesttype.RequestType.*;
-import static messages.responsetype.ResponseType.INCOMING_MESSAGE;
-import static messages.responsetype.ResponseType.SERVICE_MESSAGE;
+import static messages.responsetype.ResponseType.*;
 
 /**
  * client performs an interaction with the server using the following protocol:
@@ -27,6 +30,7 @@ public class Client {
     private Socket socket;
     private ObjectInputStream input;
     private ObjectOutputStream output;
+    private  PushHandler ph;
 
     public Client() throws IOException {
         socket = new Socket(serverHost, Server.getPort());
@@ -45,11 +49,35 @@ public class Client {
             e.printStackTrace();
             throw e;
         }
+
+        this.ph = new PushHandler(input);
     }
 
     // todo: it's a STUB, need to be changed
     public void send(String msg) throws IOException {
         output.write(msg.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private Response getTypedResponse(ResponseType... types) throws IOException, ClassNotFoundException {
+        ph.getInput();
+        Response response = null;
+        try {
+            boolean typeOk = false;
+            while (!typeOk) {
+                final var resp = (Response) input.readObject();
+                typeOk = Arrays.stream(types).parallel().anyMatch(x -> x.equals(resp.type));
+                if (!typeOk) {
+                    PushHandler.HandleResponse(resp);
+                } else {
+                    response = resp;
+                }
+            }
+        } catch (Exception e) {
+            ph.releaseInput();
+            throw e;
+        }
+        ph.releaseInput();
+        return response;
     }
 
     // returns true if exist
@@ -71,7 +99,7 @@ public class Client {
         }
 
         try {
-            var resp = (Response) input.readObject();
+            Response resp = getTypedResponse(BOOLEAN_RESPONSE);
             return resp.ok;
         } catch (IOException e) {
             // todo handle
@@ -102,14 +130,8 @@ public class Client {
         }
 
         try {
-            var resp = (Response) input.readObject();
-            if (resp.type == INCOMING_MESSAGE) {
-                return resp.message.sender;
-            } else if (resp.type == SERVICE_MESSAGE) {
-                System.out.println(resp.service);
-                return null;
-            }
-            return null;
+            Response resp = getTypedResponse(INCOMING_MESSAGE);
+            return resp.message.sender;
         } catch (IOException e) {
             // todo handle
             System.out.println("can't create an object output stream");
@@ -139,7 +161,7 @@ public class Client {
         }
 
         try {
-            var resp = (Response) input.readObject();
+            Response resp = getTypedResponse(BOOLEAN_RESPONSE);
             return resp.ok;
         } catch (IOException e) {
             // todo handle
@@ -150,6 +172,42 @@ public class Client {
         }
 
         return false;
+    }
+
+    public String[] getChatList(User user) {
+        Request req = new Request(LIST_CHATS);
+        req.message = new Message(
+                "",
+                Encryption.NONE,
+                user,
+                null,
+                null
+        );
+        try {
+            output.writeObject(req);
+            output.flush();
+        } catch (IOException e) {
+            // todo handle
+            System.out.println("can't handle an object output stream");
+        }
+
+        try {
+            Response resp = getTypedResponse(CHAT_LIST);
+            return resp.chatList;
+        } catch (IOException e) {
+            // todo handle
+            System.out.println("can't handle an object output stream");
+        } catch (ClassNotFoundException e) {
+            // todo handle
+            System.out.println("deserialization error");
+        }
+
+        return new String[]{};
+    }
+
+    public User[] getUserList() {
+        // todo implement
+        return null;
     }
 
     public void setServerHost(String host) {
